@@ -1,5 +1,5 @@
-import '../styles/globals.css'
-import '../public/css/inviscss.min.css'
+import '../public/css/bootstrap.css';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />

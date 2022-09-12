@@ -4,7 +4,7 @@ export default function EventList(props){
     const {items} = props;
 
     return(
-        <ul>
+        <div className="col-lg-4 col-md-5 col-sm-8 col-12 mx-auto">
             {items.map(event => (
             <EventItem 
                 key={event.id}
@@ -14,6 +14,6 @@ export default function EventList(props){
                 date={event.date}
                 image={event.image}
             />))}
-        </ul>
+        </div>
     );
 }

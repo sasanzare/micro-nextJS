@@ -4,8 +4,10 @@ export default function HomePage() {
 
   const featuredEvents = getFeaturedEvents();
   return (
-    <div>
+    <div className="container-fluid vh-100 d-flex justify-content-center align-items-center ">
+      <div className="row">
       <EventList items={featuredEvents} />
+      </div>
     </div>
   )
 }
