@@ -20,3 +20,5 @@ if (typeof window === "undefined") {
         prisma = global.prisma;
     }
 }
+
+export default prisma;
