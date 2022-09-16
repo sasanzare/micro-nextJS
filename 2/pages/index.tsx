@@ -10,17 +10,6 @@ export async function getServerSideProps() {
   };
 }
 
-// const options = [
-//   { key: "d", text: "DEVELOPER", value: "DEVELOPER" },
-//   { key: "u", text: "USER", value: "USER" },
-//   { key: "a", text: "ADMIN", value: "ADMIN" },
-// ];
-
-// const SELECT = options.map((option) => (
-//   <option key={option.key} value={option.value}>
-//     {option.text}
-//   </option>
-// ));
 export default function Home({ initialUsers }) {
   const [users, setUsers] =
     useState<Prisma.UserUncheckedCreateInput[]>(initialUsers);
@@ -30,13 +19,18 @@ export default function Home({ initialUsers }) {
   const [avatar, setAvatar] = useState("");
   const [role, setRole] = useState();
 
+  const capitalize = (s) => {
+    if (typeof s !== "string") return "";
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  };
+
   return (
     <div className="container py-5">
       <div className="row flex-column">
-        <h4 className="col-md-6 col-sm-8 col-12 mx-auto py-2 text-center shadow rounded text-success">
-        Create a user
+        <h4 className="col-lg-6 col-md-10 col-12 mx-auto py-2 text-center shadow rounded text-success">
+          Create a user
         </h4>
-        <div className="col-md-6 col-sm-8 col-12 mx-auto pt-3 pb-1 my-2 shadow rounded">
+        <div className="col-lg-6 col-md-10 col-12 mx-auto pt-3 pb-1 my-2 shadow rounded">
           <form
             onSubmit={async (e) => {
               e.preventDefault();
@@ -122,41 +116,53 @@ export default function Home({ initialUsers }) {
             </div>
           </form>
         </div>
-        <hr className="col-12 mt-5"/>
-        <h4 className="col-md-6 col-sm-8 col-12 mx-auto py-2 mt-4 text-center shadow rounded text-secondary">
-        Users table
+        <hr className="col-12 mt-5" />
+        <h4 className="col-lg-6 col-md-10 col-12 mx-auto py-2 mt-4 text-center shadow rounded text-secondary">
+          Users table
         </h4>
-        <div className="table-responsive mt-2 shadow rounded ">
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Avatar</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((u, index) => (
-                <tr key={index}>
-                  <th>{index}</th>
-                  <td style={{ width: "5%" }}>
-                    <img
-                      className="rounded-circle w-100"
-                      src={u.avatar ? u.avatar:"./images/avatar.jpeg"}
-                      alt=""
-                    />
-                  </td>
-                  <td>{u.firstName}</td>
-                  <td>{u.lastName}</td>
-                  <td>{u.email}</td>
-                  <td>{u.role}</td>
+        <div className="col-lg-6 col-md-10 col-12 mx-auto p-0">
+          <div className="table-responsive mt-2 shadow rounded ">
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">User</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {users.map((u, index) => (
+                  <tr key={index}>
+                    <th>{index}</th>
+                    <td className="d-flex " style={{ width: "30%" }}>
+                      <img
+                        className="rounded-circle w-100"
+                        src={u.avatar ? u.avatar : "./images/avatar.jpeg"}
+                        alt={u.firstName}
+                      />
+                      <div className="ml-2">
+                        <div>{u.firstName + " " + u.lastName}</div>
+                        <small>{capitalize(u.role)}</small>
+                      </div>
+                    </td>
+                    <td>{u.email}</td>
+                    <td>
+                      <button
+                        className="btn btn-danger"
+                        onClick={async () => {
+                          await fetcher("/api/delete", { id: u.id });
+                          await setUsers(users.filter((usr) => usr !== u));
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
